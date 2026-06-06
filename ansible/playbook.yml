@@ -1,0 +1,17 @@
+---
+- name: Homelab Multi-OS Update Routine
+  hosts: all
+  become: true  # Tells Ansible to execute commands with sudo privileges
+
+  tasks:
+    - name: Run Arch Linux System Upgrade
+      community.general.pacman:
+        update_cache: true
+        upgrade: true
+      when: ansible_os_family == "Archlinux"
+
+    - name: Run Debian System Upgrade
+      ansible.builtin.apt:
+        update_cache: true
+        upgrade: dist
+      when: ansible_os_family == "Debian"
