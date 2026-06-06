@@ -13,3 +13,10 @@ alias start-odysseus='python3 -m uvicorn app:app --host 0.0.0.0 --port 7000'
 
 # Establish secure encrypted bridge from iMac Cockpit to Mint Odysseus AI Core
 alias tunnel-odysseus="ssh -N -L 7777:127.0.0.1:7000 galyn@100.74.100.15"
+
+# ==============================================================================
+# PRIMARY LABORATORY ENTRY POINTS
+# ==============================================================================
+
+# Direct secure line to the main Linux Mint MATE bare-metal host via Tailscale
+alias mint-cockpit="ssh galyn@100.74.100.15"
