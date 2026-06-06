@@ -182,13 +182,14 @@ flowchart LR
     D["debian-vm<br/>192.168.1.157"]
   end
 
+  %% Connection Logic (Cleanly Separated Lines)
   T --> TS --> H
   T -->|SSH ProxyJump| H --> X
   T -->|SSH ProxyJump| H --> D
   F -->|Local port 7777| H --> A
-  H --> V --> X
+  H --> V
+  V --> X
   V --> D
-
 ## Operational Notes
 
 - The lab is designed around encrypted, named access paths rather than direct host exposure.
