@@ -1,0 +1,11 @@
+---
+- name: Automate Lab Public Key Injection
+  hosts: all
+  become: false
+
+  tasks:
+    - name: Ensure public key is authorized across all laboratory endpoints
+      ansible.builtin.authorized_key:
+        user: galyn
+        state: present
+        key: "{{ lookup('file', '~/.ssh/id_ed25519.pub') }}"

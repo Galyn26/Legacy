@@ -29,3 +29,17 @@ eval "$(starship init bash)"
 if [ -f ~/legacy/shell/aliases.sh ]; then
     source ~/legacy/shell/aliases.sh
 fi
+
+# ==============================================================================
+# LEGACY LABORATORY LOGIN ENVIRONMENT INJECTIONS
+# Place this inside ~/.bash_profile or ~/.profile on Headless Nodes
+# ==============================================================================
+
+# Automatically trigger localized telemetry matrices upon direct shell landing
+if [ -z "$TMUX" ]; then
+    ~/bin/cybercockpit.sh       # Executed on Arch Linux Node
+fi
+
+if [ -z "$TMUX" ]; then
+    ~/bin/debiancockpit.sh      # Executed on Debian Linux Node
+fi
