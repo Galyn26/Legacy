@@ -13,6 +13,13 @@ This repository serves as the definitive configuration archive for the entire ba
 
 ---
 
+## 🧰 Hardware Requirements
+
+> [!NOTE]
+> (will list hardware after gathering both iMacs Specs)
+
+---
+
 ## 🌐 Infrastructure & Networking Blueprint
 
 * **Automation:** Ansible playbooks handle state configuration, package synchronization, and seamless SSH key injection across different package managers (`pacman`, `apt`).
@@ -54,3 +61,8 @@ The next evolution of the `legacy` infrastructure transitions the environment fr
 ### Phase 2: Centralized Observability (Prometheus & Grafana)
 * **Metric Collection:** Deploying Prometheus node-exporters across the 2017 iMac client, Linux Mint host, Arch VM, and Debian VM to scrape hardware performance and system logs natively.
 * **Global Telemetry:** Configuring a centralized Grafana dashboard in the macOS Cockpit. This will grant a "single pane of glass" overview of the entire hybrid cloud's health, maintaining terminal efficiency while keeping deep-dive debugging to individual SSH sessions.
+
+### Phase 3: Infrastructure as Code Foundation (Terraform & Ansible)
+* **Terraform:** Defining the full environment as reusable infrastructure code so the Linux Mint host, Arch Linux setup, and Debian setup can be recreated from scratch with consistent provisioning.
+* **Ansible:** Capturing system configuration, package installation, service setup, and baseline hardening in repeatable playbooks for Linux, Arch, and Debian deployments.
+* **Recovery Workflow:** Documenting the end-to-end rebuild path so the entire stack can be restored cleanly if the setup ever needs to be reconfigured from the ground up.
