@@ -1,0 +1,131 @@
+---
+- name: Production Mac Control Plane Bootstrap (iMac 18,1 Audited)
+  hosts: localhost
+  connection: local
+  gather_facts: false
+
+  vars:
+    # 1. Audited core leaves directly from your 'brew leaves' output
+    brew_packages:
+      - autoconf
+      - bison
+      - bmake
+      - cmake
+      - cmatrix
+      - colima
+      - coreutils
+      - ctop
+      - dive
+      - docker
+      - docker-compose
+      - fontconfig
+      - fzf
+      - gh
+      - go
+      - go-md2man
+      - httpie
+      - jq
+      - lazydocker
+      - libgit2
+      - lowdown
+      - meson
+      - pkgconf
+      - python-setuptools
+      - swig
+      - tailscale
+      - tldr
+      - tmux
+      - z3
+
+    # 2. Re-engineered manual binary extraction path hooks
+    custom_binaries:
+      - name: "fnm"
+        url: 
+"https://github.com/Schniz/fnm/releases/latest/download/fnm-macos-arm64.zip" 
+# FNM fast node runtime switcher
+      - name: "lazygit"
+        url: 
+"https://github.com/jesseduffield/lazygit/releases/latest/download/lazygit_Mac_x86_64.tar.gz"
+      - name: "pfetch"
+        url: 
+"https://raw.githubusercontent.com/dylanaraps/pfetch/master/pfetch"
+      - name: "rg"
+        url: 
+"https://github.com/BurntSushi/ripgrep/releases/latest/download/ripgrep-14.1.0-x86_64-apple-darwin.tar.gz"
+
+  tasks:
+    # 
+==========================================================================
+    # PHASE 1: DOCKER TAP & HOMEBREW INGESTION LAYER
+    # 
+==========================================================================
+    - name: Ensure Homebrew environment taps are present
+      community.general.homebrew_tap:
+        name:
+          - hashicorp/tap
+          - gromgit/fuse
+          - gantoreno/macfetch
+
+    - name: Bulk install standard tools from audited brew leaves
+      community.general.homebrew:
+        name: "{{ brew_packages + ['hashicorp/tap/terraform', 
+'gromgit/fuse/sshfs-mac', 'gantoreno/macfetch/macfetch'] }}"
+        state: present
+        update_homebrew: true
+
+    # 
+==========================================================================
+    # PHASE 2: MANUAL BINARY EXTRACTION & ELEVATED DEPLOYMENT
+    # 
+==========================================================================
+    - name: Create temporary workspace directory for binary expansion
+      ansible.builtin.file:
+        path: "/tmp/dr_bootstrap"
+        state: directory
+        mode: '0755'
+
+    - name: Pull down and expand raw high-performance binaries
+      become: true
+      ansible.builtin.get_url:
+        url: "{{ item.url }}"
+        dest: "/tmp/dr_bootstrap/{{ item.name }}.download"
+      loop: "{{ custom_binaries }}"
+
+    - name: Move and set execution permissions for pfetch directly
+      become: true
+      ansible.builtin.copy:
+        src: "/tmp/dr_bootstrap/pfetch.download"
+        dest: "/usr/local/bin/pfetch"
+        mode: '0755'
+        remote_src: true
+
+    # 
+==========================================================================
+    # PHASE 3: GLOBAL PYTHON ENVIRONMENT LAYER
+    # 
+==========================================================================
+    - name: Core baseline Python package environment synchronization
+      ansible.builtin.pip:
+        name:
+          - ansible==14.0.0
+          - ansible-core==2.21.0
+          - PyYAML==6.0.3
+          - Jinja2==3.1.6
+        state: present
+
+    # 
+==========================================================================
+    # PHASE 4: REPLICATE THE MULTI-NODE ENVIRONMENT RUNTIMES
+    # 
+==========================================================================
+    - name: Re-verify Node ecosystem via execution environment shell 
+profiles
+      ansible.builtin.shell: |
+        export PATH="/usr/local/bin:$PATH"
+        eval "$(fnm env --use-on-cd)"
+        npm install -g pm2 @modelcontextprotocol/inspector 
+@modelcontextprotocol/server-filesystem
+      args:
+        executable: /bin/bash
+      register: npm_bootstrap_status
+      changed_when: "'installed' in npm_bootstrap_status.stdout"
