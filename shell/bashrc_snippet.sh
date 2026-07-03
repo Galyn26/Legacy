@@ -43,3 +43,22 @@ fi
 if [ -z "$TMUX" ]; then
     ~/bin/debiancockpit.sh      # Executed on Debian Linux Node
 fi
+
+
+# Append this to ~/.profile on Alpine
+if [ -n "$PS1" ] && [ -z "$TMUX" ]; then
+    clear
+    # [Your Micro Cockpit ASCII Art + Fastfetch Here]
+    
+    [ -f ~/.local/bin/micro-tmux.sh ] && ~/.local/bin/micro-tmux.sh
+    sleep 2
+    exec tmux attach-session -t micro 2>/dev/null || exec tmux new-session -s micro
+fi
+
+# Append this to ~/.bashrc on Fedora
+if [ -n "$PS1" ] && [ -z "$TMUX" ]; then
+    # [Your Fedora Neofetch / Banner Logic Here]
+    
+    [ -f ~/.local/bin/devops-tmux.sh ] && ~/.local/bin/devops-tmux.sh
+    exec tmux attach-session -t devops 2>/dev/null || exec tmux new-session -s devops
+fi
