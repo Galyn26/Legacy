@@ -18,7 +18,7 @@ The Engine hosts the Linux virtualization layer and exposes managed guest system
 | --- | --- | --- |
 | **arch-vm** | `192.168.1.149` | Arch Linux guest for fast-moving or minimal service workloads |
 | **debian-vm** | `192.168.1.157` | Debian guest for Debian-based workloads and package-compatibility testing |
-| **fedora-vm** | `192.168.1.XXX` | Fedora guest running locally on Cockpit (2017 iMac) for DevOps workflows |
+| **fedora-vm** | `100.75.228.94` | Fedora guest running locally on Cockpit (2017 iMac) for DevOps workflows |
 
 The Cockpit (2017 iMac) also hosts its own local fedora-vm for development and testing.
 
