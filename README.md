@@ -1,30 +1,43 @@
 # Legacy 🖥️🚀
 
-What started as pure curiosity and two gifted, obsolete iMacs has evolved into a fully automated, multi-OS hybrid cloud infrastructure with native terminal observability and local AI integration. 
+What started as pure curiosity and a couple of gifted, obsolete machines has evolved into a fully automated, multi-node hybrid cloud platform. This infrastructure features containerized AI services, 
+automated SSH hop-routing via a secure mesh overlay, and native cross-platform telemetry monitoring.
 
-This repository serves as the definitive configuration archive for the entire bare-metal pipeline.
+This repository serves as the unified infrastructure control plane and configuration source of truth for the entire bare-metal pipeline.
 
 ---
 
 ## 🏗️ Hardware Topology
 
-* **The Engine (2009 iMac):** Wiped completely and revived with Linux Mint MATE. Maxed at 16GB RAM, serving as the primary hypervisor hosting headless Arch Linux and Debian environments.
-* **The Cockpit (2017 iMac):** The central macOS frontend platform where the entire laboratory is orchestrated, monitored, and developed.
+* **The Cockpit (2017 iMac):** The central macOS operator workstation where the entire laboratory is orchestrated, monitored, and developed.
+* **The Engine (2009 iMac):** Stripped and revived with Linux Mint MATE. Maxed at 16GB RAM, serving as the core compute hypervisor hosting headless development environments and containerized 
+backends.
+* **The Micro Cockpit (Dell Inspiron 560):** A salvaged headless edge node running Alpine Linux entirely out of RAM via a 64GB Ventoy USB deployment, acting as a persistent automation anchor.
 
 ---
 
-## 🧰 Hardware Requirements
+## 🌐 Infrastructure, Networking & Core Services
 
-> [!NOTE]
-> (will list hardware after gathering both iMacs Specs)
+* **Mesh Topology:** A secure Tailscale overlay network binds the macOS workspace, Linux hypervisor, and Alpine edge node into a unified network, allowing direct SSH access (`ssh arch-vm`) from 
+anywhere.
+* **SSH ProxyJump Mechanics:** Guest VMs (`arch-vm`, `debian-vm`) are safely isolated inside an internal network subnet on the hypervisor, securely accessed via automated SSH hop-routing through the 
+Linux Mint host.
+* **Containerized AI Runtime:** The Odysseus AI platform has been fully containerized within a Docker environment on the Engine host, securely mapped back to the macOS Cockpit via an encrypted local 
+SSH tunnel on port `7777`.
+* **Cross-Distro Automation:** Ansible playbooks handle automated infrastructure state configuration, package management across divergent package systems (`pacman`, `apt`), and unified SSH public 
+key injection.
 
 ---
 
-## 🌐 Infrastructure & Networking Blueprint
+## 📊 Global Telemetry & Observability Matrix
 
-* **Automation:** Ansible playbooks handle state configuration, package synchronization, and seamless SSH key injection across different package managers (`pacman`, `apt`).
-* **Mesh Networking:** A secure Tailscale overlay network binds the macOS frontend and the Linux backend together, allowing direct, native SSH tunneling (`ssh arch-vm`) from anywhere.
-* **Port Forwarding:** Custom backgrounded tunnels handle communication via the `odysseus` protocol to route backend Python services directly to the management interface.
+The infrastructure maintains a terminal-native, single-pane-of-glass monitoring matrix scraping performance data every 15 seconds:
+
+| Service | Port | Scope | Role |
+| :--- | :--- | :--- | :--- |
+| **Node Exporter** | `9100` | Global (All Nodes) | Pulls bare-metal and kernel hardware metrics |
+| **Prometheus** | `9090` | Docker (Mint Host) | Automated time-series scraping database |
+| **Grafana** | `3000` | Docker (Mint Host) | Multi-node visualization dashboards (UI ID: 1860) |
 
 ---
 
@@ -32,37 +45,20 @@ This repository serves as the definitive configuration archive for the entire ba
 
 As part of the design and hardening phases of this laboratory, deep technical research was conducted into the underlying security layers of multi-tenant environments:
 
-* **[Whitepaper: Modern Multi-Tenant Linux Virtualization Security & Environment Masking via `socat`](docs/linux-virtualization-security-socat.pdf):** An in-depth analysis analyzing hypervisor isolation boundaries, kernel-level tenant segregation, and utilizing `socat` for advanced network socket manipulation, traffic relaying, and environment footprint masking. This research directly informs the networking topology and secure proxy routing patterns implemented across the `legacy` infrastructure.
+* **[Whitepaper: Modern Multi-Tenant Linux Virtualization Security & Environment Masking via `socat`](docs/linux-virtualization-security-socat.pdf):** An in-depth analysis looking at hypervisor 
+isolation boundaries, kernel-level tenant segregation, and utilizing `socat` for advanced network socket manipulation, traffic relaying, and environment footprint masking.
 
 ---
 
 ## 🛠️ Repository Mapping
-* `/ansible` - Playbooks for cross-distro synchronization.
-* `/ssh` - Host shortcut configurations.
-* `/shell` - Laboratory control macros and lifecycle aliases.
+
+* `/ansible` - Playbooks for cross-distro package synchronization and secure key injection.
+* `/ssh` - Host configurations and automated ProxyJump routing definitions.
+* `/shell` - Live tmux lifecycle dashboards, custom terminal bootstrap configurations, and automation macros.
+* `/AI` - Local model blueprints and engineering parameters.
+* `/docs` - Canonical architectural maps and security research whitepapers.
 
 ---
 
-## ⚠️ Disclaimer
-> [!NOTE]
-> The directory structure and contents of this repository are currently tentative and highly prone to change. The repository owner is actively tracing and scraping configuration files across the infrastructure environment to piece together the definitive deployment pipeline.
-
----
-
-## 🚀 Future Integration Roadmap
-
-The next evolution of the `legacy` infrastructure transitions the environment from a local VM laboratory into a highly distributed, secure microservice architecture.
-
-### Phase 1: AI-Driven Deep Research & Data Encryption Layer
-* **Debian VM (Data Layer):** Deploying an isolated, containerized database cluster via Docker to store vectorized information or operational logs.
-* **Arch Linux VM (Security Layer):** Configuring a minimal, lightning-fast microservice dedicated solely to cryptographic jobs, data encryption, and decryption pipelines.
-* **Odysseus AI Integration:** Elevating the Python backend running on Linux Mint to orchestrate secure queries, calling the Arch microservice to decrypt assets before feeding them into a private Deep Research LLM loop.
-
-### Phase 2: Centralized Observability (Prometheus & Grafana)
-* **Metric Collection:** Deploying Prometheus node-exporters across the 2017 iMac client, Linux Mint host, Arch VM, and Debian VM to scrape hardware performance and system logs natively.
-* **Global Telemetry:** Configuring a centralized Grafana dashboard in the macOS Cockpit. This will grant a "single pane of glass" overview of the entire hybrid cloud's health, maintaining terminal efficiency while keeping deep-dive debugging to individual SSH sessions.
-
-### Phase 3: Infrastructure as Code Foundation (Terraform & Ansible)
-* **Terraform:** Defining the full environment as reusable infrastructure code so the Linux Mint host, Arch Linux setup, and Debian setup can be recreated from scratch with consistent provisioning.
-* **Ansible:** Capturing system configuration, package installation, service setup, and baseline hardening in repeatable playbooks for Linux, Arch, and Debian deployments.
-* **Recovery Workflow:** Documenting the end-to-end rebuild path so the entire stack can be restored cleanly if the setup ever needs to be reconfigured from the ground up.
+## 📖 The Journey Behind the Build
+Want to know how this infrastructure was pieced together from legacy silicon? Check out the complete engineering narrative in [STORY.md](STORY.md).
